@@ -54,16 +54,19 @@ def create_model(hidden_node, latent_node):
     # instantiate VAE model
     model_outputs = decoder(encoder(encoder_inputs)[2])
     vae = Model(encoder_inputs, model_outputs, name='vae_mlp')
-    
+
+    # Compute VAE loss
     reconstruction_loss = binary_crossentropy(K.flatten(encoder_inputs), K.flatten(model_outputs))
     reconstruction_loss *= original_dim
     kl_loss = 1 + z_log_var - K.square(z_mean) - K.exp(z_log_var)
     kl_loss = K.sum(kl_loss, axis=-1)
     kl_loss *= -0.5
     vae_loss = K.mean(reconstruction_loss + kl_loss)
+
+    # Add the computed loss to the model
     vae.add_loss(vae_loss)
     vae.compile(optimizer='adam')
-    #vae.summary()
+
     return vae, encoder, decoder
 
 def train_model(model):
