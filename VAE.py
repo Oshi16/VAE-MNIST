@@ -24,6 +24,7 @@ def latent_sampling(args):
     dimension = K.int_shape(z_mean_layer)[1]
     ep = K.random_normal(shape=(batch, dimension))
     return z_mean_layer + K.exp(0.5 * z_log_var_layer) * ep
+    print("hello world")
 
 def create_model(hidden_node, latent_node):
     # build encoder model
