@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-from keras.layers import Lambda, Input, Dense
-from keras.models import Model
-from keras.datasets import mnist
-from keras.losses import binary_crossentropy
-from keras import backend as K
+from tensorflow.keras.layers import Lambda, Input, Dense
+from tensorflow.keras.models import Model
+from tensorflow.keras.datasets import mnist
+from tensorflow.keras.losses import binary_crossentropy
+from tensorflow.keras import backend as K
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -55,7 +55,7 @@ def create_model(hidden_node, latent_node):
     model_outputs = decoder(encoder(encoder_inputs)[2])
     vae = Model(encoder_inputs, model_outputs, name='vae_mlp')
     
-    reconstruction_loss = binary_crossentropy(encoder_inputs, model_outputs)
+    reconstruction_loss = binary_crossentropy(K.flatten(encoder_inputs), K.flatten(model_outputs))
     reconstruction_loss *= original_dim
     kl_loss = 1 + z_log_var - K.square(z_mean) - K.exp(z_log_var)
     kl_loss = K.sum(kl_loss, axis=-1)
